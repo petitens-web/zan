@@ -168,6 +168,24 @@
         font-size: 28px;
         margin-bottom: 14px;
       }
+
+      /* ── mobile: shrink cake ── */
+      @media (max-width: 480px) {
+        .cake-container {
+          transform: scale(0.55);
+          transform-origin: center top;
+          margin-bottom: calc(-45% + 20px); /* pull up space left by scale */
+        }
+        #mainTitle { font-size: 24px; }
+        #subTitle  { font-size: 15px; }
+      }
+
+      @media (max-width: 360px) {
+        .cake-container {
+          transform: scale(0.45);
+          margin-bottom: calc(-55% + 20px);
+        }
+      }
     </style>
   </head>
   <body>
@@ -358,3 +376,4 @@ this website is just my secret way of remembering you while doing the right thin
     </script>
   </body>
 </html>
+
