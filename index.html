@@ -1,224 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Happy Birthday, Zanji 🎂</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Pixelify+Sans:wght@400..700&family=Caveat:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      /* ── base ── */
-      * { box-sizing: border-box; margin: 0; padding: 0; }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Happy Birthday, Zanji 🎂</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Pixelify+Sans:wght@400..700&family=Caveat:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- style.css only needed for the @keyframes cake pixel-art animation -->
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* neutralise style.css body/global rules that break stage layout */
+    * { background-color: transparent; }
+    body {
+      display: block !important;
+      height: auto !important;
+      overflow: hidden visible !important;
+      background-color: #fff5f7 !important;
+    }
 
-      #mainTitle {
-        font-size: 32px;
-        font-family: 'Pixelify Sans', sans-serif;
-        margin-bottom: 8px;
-      }
-      #subTitle {
-        font-size: 18px;
-        font-family: 'Pixelify Sans', sans-serif;
-        color: #555;
-      }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      /* ── envelope button ── */
-      #envelopeBtn {
-        margin-top: 22px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-        font-family: 'Pixelify Sans', sans-serif;
-        font-size: 13px;
-        color: #b56576;
-        animation: floatBtn 2.4s ease-in-out infinite;
-        transition: transform 0.15s;
-      }
-      #envelopeBtn:hover { transform: scale(1.08); }
-      #envelopeBtn svg { filter: drop-shadow(0 2px 6px #f4a7b980); }
-      @keyframes floatBtn {
-        0%,100% { transform: translateY(0); }
-        50%      { transform: translateY(-5px); }
-      }
+    body {
+      min-height: 100vh;
+      background: #fff5f7;
+      font-family: 'Pixelify Sans', sans-serif;
+      color: #3d2028;
+      overflow-x: hidden;
+    }
 
-      /* ── overlay backdrop ── */
-      #envelopeOverlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(30,10,20,0.55);
-        backdrop-filter: blur(4px);
-        z-index: 100;
-        justify-content: center;
-        align-items: center;
-        padding: 16px;
-      }
-      #envelopeOverlay.open { display: flex; }
+    /* ═══════════════════════════
+       PIN SCREEN
+    ═══════════════════════════ */
+    #pinScreen {
+      position: fixed; inset: 0;
+      background: #fff5f7;
+      z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 14px; padding: 2rem;
+    }
+    .pin-emoji { font-size: 2.8rem; animation: floatUp 2.4s ease-in-out infinite; }
+    #pinScreen h2 { font-size: clamp(15px,4vw,20px); color: #b03a52; text-align: center; }
+    .pin-clue { font-family: 'Caveat', cursive; font-size: clamp(14px,3.5vw,16px); color: #b56576; }
+    .pin-dots { display: flex; gap: 14px; }
+    .pin-dot {
+      width: 15px; height: 15px; border-radius: 50%;
+      border: 2px solid #e07080; background: transparent;
+      transition: background 0.18s, transform 0.12s;
+    }
+    .pin-dot.filled { background: #e07080; transform: scale(1.2); }
+    .pin-keypad {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 10px; width: min(260px, 80vw);
+    }
+    .pin-key {
+      font-family: 'Pixelify Sans', sans-serif; font-size: clamp(1.2rem,5vw,1.4rem);
+      color: #b03a52; background: #fde9ee;
+      border: 1.5px solid #f4c0ca; border-radius: 12px;
+      padding: clamp(10px,3vw,14px); cursor: pointer;
+      transition: background 0.15s, transform 0.1s; user-select: none;
+      touch-action: manipulation;
+    }
+    .pin-key:hover  { background: #f9c6d0; }
+    .pin-key:active { transform: scale(0.92); background: #f4a7b9; }
+    .pin-key.del  { font-size: 1rem; color: #c1909a; background: transparent; border-color: transparent; }
+    .pin-key.zero { grid-column: 2; }
+    .pin-error { font-family: 'Caveat', cursive; font-size: 15px; color: #e07080; height: 1.2em; opacity: 0; transition: opacity 0.25s; }
+    .pin-error.show { opacity: 1; }
+    #pinScreen.fade-out { animation: pinOut 0.7s forwards; }
+    @keyframes pinOut { to { opacity: 0; pointer-events: none; } }
+    @keyframes shakeX {
+      0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+      40%{transform:translateX(8px)}  60%{transform:translateX(-5px)} 80%{transform:translateX(5px)}
+    }
+    @keyframes floatUp { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
-      /* ── envelope card ── */
-      #envelopeCard {
-        position: relative;
-        width: min(520px, 100%);
-        max-height: 90vh;
-        background: #fffbf5;
-        border-radius: 18px;
-        box-shadow: 0 24px 64px rgba(180,80,100,0.22), 0 4px 16px rgba(0,0,0,0.12);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        animation: popIn 0.42s cubic-bezier(.34,1.56,.64,1) both;
-      }
-      @keyframes popIn {
-        from { transform: scale(0.7) translateY(40px); opacity: 0; }
-        to   { transform: scale(1) translateY(0);      opacity: 1; }
-      }
+    /* ═══════════════════════════
+       VIDEO OVERLAYS (fullscreen)
+    ═══════════════════════════ */
+    .vid-overlay {
+      display: none; position: fixed; inset: 0;
+      background: #000; z-index: 8000;
+      align-items: center; justify-content: center;
+    }
+    .vid-overlay.open { display: flex; }
+    .vid-overlay video {
+      width: 100%; height: 100%;
+      object-fit: contain; max-height: 100vh;
+    }
+    .vid-skip {
+      position: absolute; bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem)); right: 1.5rem;
+      font-family: 'Pixelify Sans', sans-serif; font-size: 13px;
+      color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px;
+      border-radius: 20px; cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      touch-action: manipulation;
+    }
+    .vid-skip:active { color: #fff; background: rgba(255,255,255,0.18); }
+    .blow-hint {
+      position: absolute; top: max(1.5rem, env(safe-area-inset-top, 1.5rem));
+      left: 50%; transform: translateX(-50%);
+      font-family: 'Pixelify Sans', sans-serif; font-size: clamp(11px,3vw,13px);
+      color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2); padding: 8px 18px;
+      border-radius: 20px; white-space: nowrap; pointer-events: none;
+      opacity: 0; transition: opacity 0.5s;
+    }
+    .blow-hint.show { opacity: 1; }
 
-      /* envelope flap decoration */
-      #envelopeCard::before {
-        content: '';
-        display: block;
-        height: 54px;
-        background: linear-gradient(135deg, #f9c6d0 50%, #fde9ee 50%);
-        flex-shrink: 0;
-      }
+    /* ═══════════════════════════
+       STAGE SYSTEM
+    ═══════════════════════════ */
+    .stage {
+      display: none;
+      min-height: 100dvh;
+      min-height: 100vh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: clamp(28px,6vw,48px) clamp(16px,5vw,24px) 60px;
+      animation: fadeSlide 0.45s ease both;
+    }
+    .stage.active { display: flex; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-      /* ── close btn ── */
-      #closeBtn {
-        position: absolute;
-        top: 10px;
-        right: 14px;
-        background: rgba(255,255,255,0.7);
-        border: none;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        font-size: 16px;
-        cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        color: #b56576;
-        transition: background 0.2s;
-        z-index: 10;
-      }
-      #closeBtn:hover { background: #fcd4dc; }
+    /* back button */
+    .back-btn {
+      align-self: flex-start;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Pixelify Sans', sans-serif; font-size: 13px;
+      color: #b56576; background: none;
+      border: 1.5px solid #f4c0ca; border-radius: 20px;
+      padding: 8px 18px; cursor: pointer;
+      margin-bottom: 24px;
+      transition: background 0.2s, color 0.2s;
+      touch-action: manipulation;
+    }
+    .back-btn:active { background: #fde9ee; color: #b03a52; }
 
-      /* ── letter tabs ── */
-      #letterTabs {
-        display: flex;
-        border-bottom: 1.5px solid #f5d0d8;
-        padding: 0 20px;
-        gap: 4px;
-        flex-shrink: 0;
-        background: #fffbf5;
+    /* ═══════════════════════════
+       STAGE: CAKE
+       Mirrors the original index.html exactly:
+       body { display:flex; justify-content:center; align-items:center }
+       .container { flex-col; align-items:center; gap:20px }
+       .cake-container { height:250px; display:flex; justify-content:center }
+       .cake { transform:scale(5) }
+    ═══════════════════════════ */
+    #cakeStage {
+      background: #feefe5 !important;
+      /* override .stage padding — we want the original centered feel */
+      justify-content: center !important;
+      align-items: center !important;
+      padding: 10 !important;
+      min-height: 100dvh;
+    }
+    /* inner wrapper = original .container */
+    .cake-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+    }
+    #mainTitle {
+      font-size: clamp(22px, 5vw, 32px);
+      font-family: 'Pixelify Sans', sans-serif;
+    }
+    #subTitle {
+      font-size: clamp(14px, 3.5vw, 18px);
+      font-family: 'Pixelify Sans', sans-serif;
+      color: #555;
+    }
+    /* exact replica of original .cake-container */
+    .cake-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 250px;
+      margin-bottom: 400px;
+    }
+    /* exact replica of original .cake — scale(5) like the corrected style.css bottom */
+    .cake {
+      position: relative;
+      animation: cake 1s infinite;
+      -webkit-animation: cake 1s infinite;
+      transform: scale(6);
+      z-index: 2;
+      overflow: visible;
+    }
+    /* mobile: shrink further so cake doesn't overflow */
+    @media (max-width: 480px) {
+      .cake-container {
+        transform: scale(0.75);
+        transform-origin: center center;
+        height: 200px;
+        margin-bottom: 10px;
       }
-      .tab-btn {
-        padding: 10px 16px;
-        background: none;
-        border: none;
-        border-bottom: 3px solid transparent;
-        cursor: pointer;
-        font-family: 'Pixelify Sans', sans-serif;
-        font-size: 13px;
-        color: #c1909a;
-        transition: color 0.2s, border-color 0.2s;
-        margin-bottom: -1.5px;
+    }
+    @media (max-width: 360px) {
+      .cake-container {
+        transform: scale(0.6);
+        transform-origin: center center;
+        height: 160px;
+        margin-bottom: 0;
       }
-      .tab-btn.active {
-        color: #b03a52;
-        border-bottom-color: #e07080;
-      }
-      .tab-btn:hover { color: #b03a52; }
+    }
 
-      /* ── letter body ── */
-      #letterBody {
-        overflow-y: auto;
-        padding: 28px 28px 32px;
-        flex: 1;
-      }
-      #letterBody::-webkit-scrollbar { width: 5px; }
-      #letterBody::-webkit-scrollbar-track { background: transparent; }
-      #letterBody::-webkit-scrollbar-thumb { background: #f4c0ca; border-radius: 4px; }
+    /* blow button */
+    .blow-btn {
+      margin-top: 16px;
+      background: none; border: 2px dashed #e07080; border-radius: 30px;
+      padding: 12px 26px;
+      cursor: pointer;
+      font-family: 'Pixelify Sans', sans-serif;
+      font-size: 15px; color: #b56576;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.2s; touch-action: manipulation;
+      z-index: 10; position: relative;
+    }
+    .blow-btn:active { background: #fde9ee; }
+    .cake-confetti {
+      font-size: 28px;
+      animation: popIn 0.4s ease both;
+      text-align: center; margin-top: 8px;
+      position: relative; z-index: 10;
+    }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
 
-      .letter-content {
-        display: none;
-        font-family: 'Caveat', cursive;
-        font-size: 19px;
-        line-height: 1.75;
-        color: #3d2028;
-        white-space: pre-wrap;
-        word-break: break-word;
-      }
-      .letter-content.active { display: block; animation: fadeSlide 0.3s ease both; }
-      @keyframes fadeSlide {
-        from { opacity: 0; transform: translateY(8px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
+    /* continue button */
+    .continue-btn {
+      margin-top: 16px;
+      background: #f4a7b9; border: none; border-radius: 30px;
+      padding: 14px 36px;
+      cursor: pointer;
+      font-family: 'Pixelify Sans', sans-serif;
+      font-size: 15px; color: #fff;
+      display: none; align-items: center; gap: 8px;
+      box-shadow: 0 4px 14px rgba(240,120,140,0.3);
+      transition: background 0.2s, transform 0.15s;
+      touch-action: manipulation;
+      position: relative; z-index: 10;
+    }
+    .continue-btn.show { display: inline-flex; animation: popIn 0.4s ease both; }
+    .continue-btn:active { transform: scale(0.95); }
 
-      /* little wax seal decoration at top of letter */
-      .letter-content::before {
-        content: '💌';
-        display: block;
-        font-size: 28px;
-        margin-bottom: 14px;
-      }
+    /* ═══════════════════════════
+       STAGE: ENVELOPE / LETTERS
+    ═══════════════════════════ */
+    #envStage { background: #fff5f7; }
+    .env-stage-title {
+      font-size: clamp(18px,5vw,22px); color: #b03a52;
+      margin-bottom: 4px; text-align: center;
+    }
+    .env-stage-sub {
+      font-family: 'Caveat', cursive; font-size: clamp(13px,3.5vw,15px);
+      color: #b56576; margin-bottom: 24px; text-align: center;
+    }
+    .env-inline-card {
+      width: min(520px, 100%);
+      background: #fffbf5; border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(180,80,100,0.13), 0 2px 8px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+    .env-inline-card::before {
+      content: ''; display: block; height: 50px;
+      background: linear-gradient(135deg, #f9c6d0 50%, #fde9ee 50%);
+    }
+    #letterTabs {
+      display: flex; border-bottom: 1.5px solid #f5d0d8;
+      padding: 0 16px; gap: 4px; background: #fffbf5;
+    }
+    .tab-btn {
+      padding: 10px 14px; background: none; border: none;
+      border-bottom: 3px solid transparent; cursor: pointer;
+      font-family: 'Pixelify Sans', sans-serif;
+      font-size: clamp(12px,3vw,13px); color: #c1909a;
+      transition: color 0.2s, border-color 0.2s; margin-bottom: -1.5px;
+      touch-action: manipulation;
+    }
+    .tab-btn.active { color: #b03a52; border-bottom-color: #e07080; }
+    #letterBody {
+      overflow-y: auto; padding: clamp(18px,5vw,28px);
+      max-height: min(48vh, 320px);
+    }
+    #letterBody::-webkit-scrollbar { width: 4px; }
+    #letterBody::-webkit-scrollbar-thumb { background: #f4c0ca; border-radius: 4px; }
+    .letter-content {
+      display: none; font-family: 'Caveat', cursive;
+      font-size: clamp(16px,4vw,19px);
+      line-height: 1.75; color: #3d2028; white-space: pre-wrap; word-break: break-word;
+    }
+    .letter-content.active { display: block; animation: fadeSlide 0.3s ease both; }
+    .letter-content::before { content: '💌'; display: block; font-size: 26px; margin-bottom: 12px; }
 
-      /* ── mobile: shrink cake ── */
-      @media (max-width: 480px) {
-        .cake-container {
-          transform: scale(0.55);
-          transform-origin: center top;
-          margin-bottom: calc(-45% + 20px); /* pull up space left by scale */
-        }
-        #mainTitle { font-size: 24px; }
-        #subTitle  { font-size: 15px; }
-      }
+    /* action buttons */
+    .env-actions {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 10px; margin-top: 20px; width: min(520px,100%);
+    }
+    .env-action-btn {
+      font-family: 'Pixelify Sans', sans-serif; font-size: clamp(12px,3.5vw,13px);
+      color: #b03a52; background: #fde9ee;
+      border: 1.5px solid #f4c0ca; border-radius: 20px;
+      padding: clamp(9px,2.5vw,10px) clamp(16px,4vw,22px); cursor: pointer;
+      transition: background 0.18s, transform 0.12s;
+      display: inline-flex; align-items: center; gap: 6px;
+      touch-action: manipulation;
+    }
+    .env-action-btn:active { transform: scale(0.94); background: #f9c6d0; }
 
-      @media (max-width: 360px) {
-        .cake-container {
-          transform: scale(0.45);
-          margin-bottom: calc(-55% + 20px);
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div id="birthdayText"></div>
-      <div class="cake-container">
-        <div class="cake" id="cake"></div>
-      </div>
+    /* ═══════════════════════════
+       STAGE: BLUER (dark)
+    ═══════════════════════════ */
+    #bluerStage {
+      background: #0d0005; justify-content: center;
+      position: relative;
+    }
+    #bluerStage .back-btn {
+      position: absolute;
+      top: max(1.2rem, env(safe-area-inset-top, 1.2rem));
+      left: 1rem;
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0;
+    }
+    #bluerStage .back-btn:active { background: rgba(255,255,255,0.16); color: #fff; }
+    .bluer-video-wrap { width: 100%; max-width: 720px; }
+    .bluer-video-wrap video {
+      width: 100%; display: block;
+      background: #000; border-radius: 10px;
+    }
 
-      <!-- envelope button always visible -->
-      <button id="envelopeBtn" aria-label="Open letters">
-        <svg width="52" height="38" viewBox="0 0 52 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="50" height="36" rx="5" fill="#fde9ee" stroke="#e07080" stroke-width="2"/>
-          <path d="M1 5 L26 22 L51 5" stroke="#e07080" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M1 33 L18 19" stroke="#f4a7b9" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M51 33 L34 19" stroke="#f4a7b9" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        open letters 💌
-      </button>
+    /* ═══════════════════════════
+       STAGE: ZANJI
+    ═══════════════════════════ */
+    #zanjiStage { background: #fff5f7; }
+    .zanji-title {
+      font-size: clamp(17px,5vw,20px); color: #b03a52;
+      margin-bottom: 18px; text-align: center;
+    }
+    .zanji-video-wrap {
+      width: 100%; max-width: 680px;
+      background: #1a0a0e; border-radius: 14px;
+      overflow: hidden; border: 1.5px solid #f5d0d8;
+      box-shadow: 0 6px 32px rgba(180,80,100,0.13);
+    }
+    .zanji-video-wrap video { width: 100%; display: block; }
+
+    /* ═══════════════════════════
+       STAGE: SPOTIFY
+    ═══════════════════════════ */
+    #spotifyStage { background: #fff5f7; }
+    .spotify-title {
+      font-size: clamp(17px,5vw,20px); color: #b03a52;
+      margin-bottom: 18px; text-align: center;
+    }
+    .spotify-wrap { width: 100%; max-width: 660px; border-radius: 12px; overflow: hidden; }
+
+    /* ═══════════════════════════
+       MOBILE TWEAKS
+    ═══════════════════════════ */
+    @media (max-width: 400px) {
+      .env-actions { flex-direction: column; align-items: stretch; }
+      .env-action-btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ 1. PIN SCREEN ═══ -->
+<div id="pinScreen">
+  <div class="pin-emoji">🎂</div>
+  <h2>enter a code to open this 🌸</h2>
+  <div class="pin-clue">clue: ur birthday</div>
+  <div class="pin-dots" id="pinDots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-error" id="pinError">wrong code, try again 🌷</div>
+  <div class="pin-keypad">
+    <button class="pin-key" onclick="pinPress('1')">1</button>
+    <button class="pin-key" onclick="pinPress('2')">2</button>
+    <button class="pin-key" onclick="pinPress('3')">3</button>
+    <button class="pin-key" onclick="pinPress('4')">4</button>
+    <button class="pin-key" onclick="pinPress('5')">5</button>
+    <button class="pin-key" onclick="pinPress('6')">6</button>
+    <button class="pin-key" onclick="pinPress('7')">7</button>
+    <button class="pin-key" onclick="pinPress('8')">8</button>
+    <button class="pin-key" onclick="pinPress('9')">9</button>
+    <button class="pin-key del" onclick="pinDel()">⌫</button>
+    <button class="pin-key zero" onclick="pinPress('0')">0</button>
+  </div>
+</div>
+
+<!-- ═══ 2. HAPPY BIRTHDAY VIDEO (fullscreen) ═══ -->
+<div id="bdayOverlay" class="vid-overlay">
+  <video id="bdayVideo" playsinline>
+    <source src="happy-birthday.mp4" type="video/mp4">
+  </video>
+  <div class="blow-hint" id="blowHint">🕯️ blow the candles!</div>
+  <button class="vid-skip" onclick="endBday()">skip →</button>
+</div>
+
+<!-- ═══ 3. HAPPY HAPPY HAPPY VIDEO (fullscreen) ═══ -->
+<div id="happyOverlay" class="vid-overlay">
+  <video id="happyVideo" playsinline>
+    <source src="happy-happy-happy.mp4" type="video/mp4">
+  </video>
+  <button class="vid-skip" onclick="endHappy()">skip →</button>
+</div>
+
+<!-- ═══ 4. CAKE STAGE ═══ -->
+<div id="cakeStage" class="stage">
+  <div class="cake-inner">
+    <div id="mainTitle">Happy Birthday, <span style="font-family:'Fredoka One',cursive;">Z</span>anji!</div>
+    <div id="subTitle">make a wish and blow! 🕯️</div>
+
+    <div class="cake-container">
+      <div class="cake" id="cake"></div>
     </div>
 
-    <!-- overlay -->
-    <div id="envelopeOverlay" role="dialog" aria-modal="true" aria-label="Letters">
-      <div id="envelopeCard">
-        <button id="closeBtn" aria-label="Close">✕</button>
+    <div id="cakeConfetti" style="display:none; font-size:28px; animation:popIn 0.4s ease both;">🎉🎊✨🎈🌸</div>
+    <button class="blow-btn" id="blowBtn" onclick="blowCandles()">🌬️ blow the candles!</button>
+    <button class="continue-btn" id="continueBtn" onclick="goToHappy()">continue 🎵</button>
+  </div>
+</div>
 
-        <div id="letterTabs">
-          <button class="tab-btn active" data-tab="0">Letter 1</button>
-          <button class="tab-btn" data-tab="1">Letter 2</button>
-        </div>
+<!-- ═══ 5. ENVELOPE / LETTERS STAGE ═══ -->
+<div id="envStage" class="stage">
+  <div class="env-stage-title">for you, zan 🌸</div>
+  <div class="env-stage-sub">open whenever you're ready</div>
 
-        <div id="letterBody">
-          <div class="letter-content active" id="letter-0">hi, zanji!
+  <div class="env-inline-card">
+    <div id="letterTabs">
+      <button class="tab-btn active" data-tab="0">Letter 1</button>
+      <button class="tab-btn" data-tab="1">Letter 2</button>
+    </div>
+    <div id="letterBody">
+      <div class="letter-content active" id="letter-0">hi, zanji!
 alam mo ba, ang cool mo. literally. u're so astig in every way. tuwing kausap kita, parang ayaw ko nang matulog kasi hindi natatapos 'yung mga kwento mo sa buhay. sabi nga ni ada, buti hindi raw ako nao-overwhelm kasi grabe ka raw mag-yap, pero ewan ko, sobrang okay sa 'kin na umaabot tayo ng alas-kwatro kaka-talk. tuwing inaantok na ako, parang ayaw ko pa mag-end ang usapan natin. 'yan ang isang bagay na nagustuhan ko sa 'yo (not romantically, ha)—'yung pagiging yapper mo at kung gaano ka kagaling maghandle ng conversation. u're so astig, i swear
 
 one thing pa, 'yung sobrang lawak ng kaisipan mo sa isang bagay. u have an innovative and broad thinking, kaya parang ang dali lang sa 'yo ng mga gawain kasi humahanap ka ng paraan na mas madali pero sa paraang bongga pa rin. ang astig lang talaga. isa pa ay kung gaano ka kagaling makipag-communicate, kaya siguro sobrang gaan ng loob ng mga tao sa 'yo kasi mataas ang emotional intelligence mo. hahaha gg
@@ -227,153 +457,279 @@ pero ito lang, lastly—'yung kung paano mo sarilihin 'yung mga problema mo. boi
 
 u're so cool, zan, pero hindi laging 'yung cool side ang dapat mong ipinapakita. bahala ka, kapag nag-boom 'yan nang sabay-sabay, ang hirap n'yan i-handle. alam ko namang sanay ka na sa isolation tuwing may problema ka, o kaya gumagala para lang ma-ease 'yung mind mo, pero hindi kasi laging pwedeng ganoon. kailangan mo rin ng karamay. kung iniisip mong sapat na 'yung presence lang nila na kasama mo, feeling ko hindi eh. paano na lang kung isang araw hindi kayo makagala, 'di ba? gagi, tama ba ako? 'yon lang, ayaw ko na nga. sobrang dami ko pang want sabihin, pero hindi ko ma-put into words</div>
 
-          <div class="letter-content" id="letter-1">hey, i just wanted to write this down, kahit alam kong hinding-hindi mo 'to mababasa.
+      <div class="letter-content" id="letter-1">hey, i just wanted to write this down, kahit alam kong hinding-hindi mo 'to mababasa.
 
 to be honest, wala talaga akong balak na kausapin ka ulit o magparamdam sa 'yo. everyday, i'm still haunted by the exact same thought—na baka kapag bumalik ako sa buhay mo, i might just ruin you. natatakot akong masira ko lang kung anong peace of mind mayroon ka ngayon. so, pinili ko na lang na tuluyang lumayo
 
 pero ngayong araw, gumawa ako ng website na 'to. wala akong balak ibigay sa 'yo 'yung link, at wala akong balak ipaalam na nage-exist 'to. ginawa ko lang 'to para maging sign na kahit hindi na ako pwedeng lumapit, hinding-hindi ko nakalimutan ang birthday mo
 
 this website is just my secret way of remembering you while doing the right thing by staying away. safe space ko na lang 'to, and my quiet promise na hinding-hindi ko na guguluhin ang mundo mo</div>
-        </div>
-      </div>
     </div>
+  </div>
 
-    <script>
-      // ── URL params ──
-      const params = new URLSearchParams(window.location.search);
-      const name = params.get("name") || "Zanji";
-      let candleCount = parseInt(params.get("candles")) || 4;
-      candleCount = Math.min(Math.max(candleCount, 1), 30);
+  <div class="env-actions">
+    <button class="env-action-btn" onclick="goTo('bluerStage')">🎬 ;(</button>
+    <button class="env-action-btn" onclick="goTo('zanjiStage'); playZanji()">🌸 zanji</button>
+    <button class="env-action-btn" onclick="goTo('spotifyStage')">🎵 music</button>
+  </div>
+</div>
 
-      document.getElementById("birthdayText").innerHTML = `
-        <div id="mainTitle">Happy Birthday, <span style="font-family:'Fredoka One',cursive;">${name.charAt(0)}</span>${name.slice(1)}!</div>
-        <div id="subTitle">hoping u're doing well ✨</div>
-      `;
+<!-- ═══ 6. BLUER THAN BLUE STAGE ═══ -->
+<div id="bluerStage" class="stage">
+  <button class="back-btn" onclick="goBack('bluerStage')">← back</button>
+  <div class="bluer-video-wrap">
+    <video id="bluerVideo" controls playsinline>
+      <source src="bluer-than-blue.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
 
-      // ── candles ──
-      const cake = document.getElementById("cake");
-      const colors = ["green-candle","purple-candle","blue-candle","yellow-candle"];
-      const CAKE_VISUAL_WIDTH = 35;
+<!-- ═══ 7. ZANJI STAGE ═══ -->
+<div id="zanjiStage" class="stage">
+  <button class="back-btn" onclick="goBack('zanjiStage')">← back</button>
+  <div class="zanji-title">zanji 🌸</div>
+  <div class="zanji-video-wrap">
+    <video id="zanjiVideo" controls playsinline>
+      <source src="zanji.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
 
-      function createCandles(count) {
-        cake.innerHTML = "";
-        const CANDLE_VISUAL_WIDTH = 2;
-        const availableWidth = CAKE_VISUAL_WIDTH;
-        const candlesPerRow = 6;
-        const shiftAmount = 4;
-        for (let i = 0; i < count; i++) {
-          const candle = document.createElement("div");
-          candle.classList.add("candle");
-          candle.classList.add(colors[Math.floor(Math.random() * colors.length)]);
-          const row = Math.floor(i / candlesPerRow);
-          const col = i % candlesPerRow;
-          const totalCandlesInRow = Math.min(candlesPerRow, count - row * candlesPerRow);
-          const rowSpacing = availableWidth / (totalCandlesInRow + 1);
-          const leftBase = rowSpacing * (col + 1) - CANDLE_VISUAL_WIDTH / 2 + 5;
-          const rowShift = row % 2 === 0 ? 0 : shiftAmount;
-          candle.style.position = "absolute";
-          candle.style.top = `${10 + row * 3}px`;
-          candle.style.left = `${leftBase - rowShift + 4}px`;
-          cake.appendChild(candle);
-        }
-      }
-      createCandles(candleCount);
+<!-- ═══ 8. SPOTIFY STAGE ═══ -->
+<div id="spotifyStage" class="stage">
+  <button class="back-btn" onclick="goBack('spotifyStage')">← back</button>
+  <div class="spotify-title">🎵 a playlist for you</div>
+  <div class="spotify-wrap">
+    <iframe
+      style="border-radius:12px"
+      src="https://open.spotify.com/embed/playlist/3iwJlFqIy8yxUBJn1lBzk8?utm_source=generator"
+      width="100%" height="352" frameBorder="0" allowfullscreen=""
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy">
+    </iframe>
+  </div>
+</div>
 
-      // ── mic / blow detection ──
-      async function startMicDetection() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-          const source = audioContext.createMediaStreamSource(stream);
-          const analyser = audioContext.createAnalyser();
-          analyser.fftSize = 512;
-          source.connect(analyser);
-          const dataArray = new Uint8Array(analyser.frequencyBinCount);
-          let blown = false;
+<script>
+/* ══════════════════════════
+   PIN
+══════════════════════════ */
+const PIN = '0527';
+let pinEntry = '';
 
-          function detectBlow() {
-            analyser.getByteFrequencyData(dataArray);
-            let highFreqSum = 0, lowFreqSum = 0;
-            const midpoint = dataArray.length / 2;
-            for (let i = 0; i < dataArray.length; i++) {
-              if (i < midpoint) lowFreqSum += dataArray[i];
-              else highFreqSum += dataArray[i];
-            }
-            const ratio = (highFreqSum / (dataArray.length / 2)) / ((lowFreqSum / (dataArray.length / 2)) + 1);
-            if (ratio > 0.5 && !blown) { blown = true; blowOutCandles(); }
-            requestAnimationFrame(detectBlow);
-          }
-          detectBlow();
-        } catch (err) { console.error("Mic access error:", err); }
-      }
+function pinPress(d) {
+  if (pinEntry.length >= 4) return;
+  pinEntry += d;
+  updateDots();
+  if (pinEntry.length === 4) setTimeout(checkPin, 130);
+}
+function pinDel() {
+  pinEntry = pinEntry.slice(0, -1);
+  updateDots();
+  document.getElementById('pinError').classList.remove('show');
+}
+function updateDots() {
+  for (let i = 0; i < 4; i++)
+    document.getElementById('pd' + i).classList.toggle('filled', i < pinEntry.length);
+}
+function checkPin() {
+  if (pinEntry === PIN) {
+    const ps = document.getElementById('pinScreen');
+    ps.classList.add('fade-out');
+    setTimeout(() => { ps.style.display = 'none'; startBday(); }, 650);
+  } else {
+    document.getElementById('pinError').classList.add('show');
+    const dots = document.getElementById('pinDots');
+    dots.style.animation = 'none';
+    void dots.offsetWidth;
+    dots.style.animation = 'shakeX 0.4s ease';
+    pinEntry = '';
+    setTimeout(updateDots, 80);
+  }
+}
 
-      function blowOutCandles() {
-        document.querySelectorAll(".candle").forEach(candle => {
-          const delay = Math.random() * 1000;
-          setTimeout(() => {
-            colors.forEach(color => { if (candle.classList.contains(color)) candle.classList.add("blown"); });
-          }, delay);
-        });
-        setTimeout(() => {
-          document.getElementById("subTitle").textContent = "Yayy! Wishing you the happiest birthday ever!! 🎉";
-          // auto-open envelope after candles blown
-          setTimeout(openEnvelope, 900);
-        }, 1200);
-      }
+/* ══════════════════════════
+   STAGE ROUTER
+══════════════════════════ */
+let stageHistory = [];
 
-      // ── mobile blow button ──
-      const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobile) {
-        const blowBtn = document.createElement("button");
-        blowBtn.id = "blowBtn";
-        blowBtn.textContent = "🌬️ blow candles";
-        blowBtn.style.cssText = `
-          margin-top: 14px;
-          background: none;
-          border: 2px dashed #e07080;
-          border-radius: 30px;
-          padding: 10px 22px;
-          cursor: pointer;
-          font-family: 'Pixelify Sans', sans-serif;
-          font-size: 14px;
-          color: #b56576;
-          animation: floatBtn 2.4s ease-in-out infinite;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        `;
-        let blown = false;
-        blowBtn.addEventListener("click", () => {
-          if (!blown) { blown = true; blowBtn.disabled = true; blowBtn.style.opacity = "0.4"; blowOutCandles(); }
-        });
-        document.querySelector(".container").appendChild(blowBtn);
-      } else {
-        startMicDetection();
-      }
+function goTo(id) {
+  const cur = document.querySelector('.stage.active');
+  if (cur) stageHistory.push(cur.id);
+  document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
 
-      // ── envelope logic ──
-      const overlay  = document.getElementById("envelopeOverlay");
-      const closeBtn = document.getElementById("closeBtn");
-      const envBtn   = document.getElementById("envelopeBtn");
+function goBack(fromId) {
+  document.getElementById(fromId).querySelectorAll('video').forEach(v => v.pause());
+  document.getElementById(fromId).classList.remove('active');
+  const prev = stageHistory.pop() || 'envStage';
+  document.getElementById(prev).classList.add('active');
+  window.scrollTo(0, 0);
+}
 
-      function openEnvelope() { overlay.classList.add("open"); }
-      function closeEnvelope() { overlay.classList.remove("open"); }
+/* ══════════════════════════
+   BIRTHDAY VIDEO
+══════════════════════════ */
+let bdayDone = false, micStream = null, micAudioCtx = null;
 
-      envBtn.addEventListener("click", openEnvelope);
-      closeBtn.addEventListener("click", closeEnvelope);
-      overlay.addEventListener("click", e => { if (e.target === overlay) closeEnvelope(); });
+function startBday() {
+  const ov = document.getElementById('bdayOverlay');
+  ov.classList.add('open');
+  const vid = document.getElementById('bdayVideo');
+  vid.muted = true;
+  vid.play().then(() => { vid.muted = false; }).catch(() => {});
+  setTimeout(() => document.getElementById('blowHint').classList.add('show'), 2000);
+  vid.addEventListener('ended', () => { if (!bdayDone) endBday(); }, { once: true });
+  startMic();
+}
 
-      // tab switching
-      document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const idx = btn.dataset.tab;
-          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-          document.querySelectorAll(".letter-content").forEach(l => l.classList.remove("active"));
-          btn.classList.add("active");
-          document.getElementById(`letter-${idx}`).classList.add("active");
-        });
-      });
-    </script>
-  </body>
+function startMic() {
+  if (!navigator.mediaDevices) return;
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    micStream = stream;
+    micAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = micAudioCtx.createMediaStreamSource(stream);
+    const an  = micAudioCtx.createAnalyser(); an.fftSize = 512;
+    src.connect(an);
+    const data = new Uint8Array(an.frequencyBinCount);
+    function check() {
+      if (bdayDone) return;
+      an.getByteFrequencyData(data);
+      const mid = data.length / 2;
+      let lo = 0, hi = 0;
+      data.forEach((v, i) => { if (i < mid) lo += v; else hi += v; });
+      if ((hi / mid) / ((lo / mid) + 1) > 0.5) { bdayDone = true; endBday(); }
+      else requestAnimationFrame(check);
+    }
+    check();
+  }).catch(() => {});
+}
+
+function endBday() {
+  bdayDone = true;
+  if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+  if (micAudioCtx) { micAudioCtx.close(); micAudioCtx = null; }
+  document.getElementById('bdayVideo').pause();
+  document.getElementById('bdayOverlay').classList.remove('open');
+  stageHistory = [];
+  goTo('cakeStage');
+  createCandles(4);
+  // desktop: mic; mobile: button only
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (!isMobile) startCakeMic();
+}
+
+/* ══════════════════════════
+   CAKE STAGE  
+══════════════════════════ */
+let cakeMicStream = null, cakeMicCtx = null, cakeBlown = false;
+const cakeColors = ['green-candle','purple-candle','blue-candle','yellow-candle'];
+
+function createCandles(count) {
+  const cake = document.getElementById('cake');
+  cake.innerHTML = '';
+  const CAKE_VISUAL_WIDTH = 35;
+  const candlesPerRow = 6, shiftAmount = 4;
+  for (let i = 0; i < count; i++) {
+    const candle = document.createElement('div');
+    candle.classList.add('candle');
+    candle.classList.add(cakeColors[Math.floor(Math.random() * cakeColors.length)]);
+    const row = Math.floor(i / candlesPerRow);
+    const col = i % candlesPerRow;
+    const totalInRow = Math.min(candlesPerRow, count - row * candlesPerRow);
+    const rowSpacing = CAKE_VISUAL_WIDTH / (totalInRow + 1);
+    const leftBase = rowSpacing * (col + 1) - 1 + 5;
+    const rowShift = row % 2 === 0 ? 0 : shiftAmount;
+    candle.style.position = 'absolute';
+    candle.style.top = `${10 + row * 3}px`;
+    candle.style.left = `${leftBase - rowShift + 4}px`;
+    cake.appendChild(candle);
+  }
+}
+
+function startCakeMic() {
+  if (!navigator.mediaDevices) return;
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    cakeMicStream = stream;
+    cakeMicCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = cakeMicCtx.createMediaStreamSource(stream);
+    const an  = cakeMicCtx.createAnalyser(); an.fftSize = 512;
+    src.connect(an);
+    const data = new Uint8Array(an.frequencyBinCount);
+    function check() {
+      if (cakeBlown) return;
+      an.getByteFrequencyData(data);
+      const mid = data.length / 2;
+      let lo = 0, hi = 0;
+      data.forEach((v, i) => { if (i < mid) lo += v; else hi += v; });
+      if ((hi / mid) / ((lo / mid) + 1) > 0.5) blowCandles();
+      else requestAnimationFrame(check);
+    }
+    check();
+  }).catch(() => {});
+}
+
+function blowCandles() {
+  if (cakeBlown) return;
+  cakeBlown = true;
+  if (cakeMicStream) { cakeMicStream.getTracks().forEach(t => t.stop()); cakeMicStream = null; }
+  if (cakeMicCtx)    { cakeMicCtx.close(); cakeMicCtx = null; }
+  // blow out each candle with a random delay — exactly like original
+  document.querySelectorAll('.candle').forEach(candle => {
+    setTimeout(() => {
+      cakeColors.forEach(c => { if (candle.classList.contains(c)) candle.classList.add('blown'); });
+    }, Math.random() * 1000);
+  });
+  setTimeout(() => {
+    document.getElementById('subTitle').textContent = 'Yayy!! Wishing u the happiest birthday ever!! 🎉';
+    document.getElementById('cakeConfetti').style.display = 'block';
+    document.getElementById('blowBtn').style.display = 'none';
+    document.getElementById('continueBtn').classList.add('show');
+  }, 1400);
+}
+
+function goToHappy() {
+  document.getElementById('cakeStage').classList.remove('active');
+  const ho = document.getElementById('happyOverlay');
+  ho.classList.add('open');
+  const hv = document.getElementById('happyVideo');
+  hv.muted = true;
+  hv.play().then(() => { hv.muted = false; }).catch(() => {});
+  hv.addEventListener('ended', endHappy, { once: true });
+}
+
+function endHappy() {
+  document.getElementById('happyVideo').pause();
+  document.getElementById('happyOverlay').classList.remove('open');
+  stageHistory = [];
+  goTo('envStage');
+}
+
+/* ══════════════════════════
+   ZANJI AUTOPLAY
+══════════════════════════ */
+function playZanji() {
+  setTimeout(() => {
+    const v = document.getElementById('zanjiVideo');
+    v.muted = true;
+    v.play().then(() => { v.muted = false; }).catch(() => {});
+  }, 300);
+}
+
+/* ══════════════════════════
+   LETTER TABS
+══════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const idx = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.letter-content').forEach(l => l.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('letter-' + idx).classList.add('active');
+  });
+});
+</script>
+</body>
 </html>
-
