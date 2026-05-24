@@ -193,23 +193,23 @@
       z-index: 2;
       overflow: visible;
     }
-    /* mobile: shrink further so cake doesn't overflow */
-    @media (max-width: 480px) {
-      .cake-container {
-        transform: scale(0.75);
-        transform-origin: center center;
-        height: 200px;
-        margin-bottom: 10px;
+     /* ── mobile: shrink cake ── */
+      @media (max-width: 480px) {
+        .cake-container {
+          transform: scale(0.55);
+          transform-origin: center top;
+          margin-bottom: calc(-45% + 20px); /* pull up space left by scale */
+        }
+        #mainTitle { font-size: 24px; }
+        #subTitle  { font-size: 15px; }
       }
-    }
-    @media (max-width: 360px) {
-      .cake-container {
-        transform: scale(0.6);
-        transform-origin: center center;
-        height: 160px;
-        margin-bottom: 0;
+
+      @media (max-width: 360px) {
+        .cake-container {
+          transform: scale(0.45);
+          margin-bottom: calc(-55% + 20px);
+        }
       }
-    }
 
     /* blow button */
     .blow-btn {
