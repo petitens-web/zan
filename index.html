@@ -194,32 +194,32 @@
       overflow: visible;
     }
      /* ── mobile: shrink cake ── */
-      @media (max-width: 480px) {
+      @media (max-width: 500px) {
         .cake-container {
-          transform: scale(0.55);
+          transform: scale(0.70);
           transform-origin: center top;
-          margin-bottom: calc(-45% + 20px); /* pull up space left by scale */
+          margin-bottom: calc(-50% + 20px); /* pull up space left by scale */
         }
         #mainTitle { font-size: 24px; }
         #subTitle  { font-size: 15px; }
       }
 
-      @media (max-width: 360px) {
+      @media (max-width: 500px) {
         .cake-container {
-          transform: scale(0.45);
-          margin-bottom: calc(-55% + 20px);
+          transform: scale(0.70);
+          margin-bottom: calc(-50% + 20px);
         }
       }
 
     /* blow button */
     .blow-btn {
-      margin-top: 16px;
+      margin-bottom: 5px;
       background: none; border: 2px dashed #e07080; border-radius: 30px;
       padding: 12px 26px;
       cursor: pointer;
       font-family: 'Pixelify Sans', sans-serif;
       font-size: 15px; color: #b56576;
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 4px;
       transition: background 0.2s; touch-action: manipulation;
       z-index: 10; position: relative;
     }
