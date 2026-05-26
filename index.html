@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Happy Birthday, Zanji 🎂</title>
+  <title>happy birthday, zanji 🎂</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Pixelify+Sans:wght@400..700&family=Caveat:wght@400;600&display=swap" rel="stylesheet" />
-  <!-- style.css only needed for the @keyframes cake pixel-art animation -->
+
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* neutralise style.css body/global rules that break stage layout */
+
     * { background-color: transparent; }
     body {
       display: block !important;
@@ -29,9 +29,6 @@
       overflow-x: hidden;
     }
 
-    /* ═══════════════════════════
-       PIN SCREEN
-    ═══════════════════════════ */
     #pinScreen {
       position: fixed; inset: 0;
       background: #fff5f7;
@@ -76,9 +73,6 @@
     }
     @keyframes floatUp { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
-    /* ═══════════════════════════
-       VIDEO OVERLAYS (fullscreen)
-    ═══════════════════════════ */
     .vid-overlay {
       display: none; position: fixed; inset: 0;
       background: #000; z-index: 8000;
@@ -99,20 +93,7 @@
       touch-action: manipulation;
     }
     .vid-skip:active { color: #fff; background: rgba(255,255,255,0.18); }
-    .blow-hint {
-      position: absolute; top: max(1.5rem, env(safe-area-inset-top, 1.5rem));
-      left: 50%; transform: translateX(-50%);
-      font-family: 'Pixelify Sans', sans-serif; font-size: clamp(11px,3vw,13px);
-      color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2); padding: 8px 18px;
-      border-radius: 20px; white-space: nowrap; pointer-events: none;
-      opacity: 0; transition: opacity 0.5s;
-    }
-    .blow-hint.show { opacity: 1; }
 
-    /* ═══════════════════════════
-       STAGE SYSTEM
-    ═══════════════════════════ */
     .stage {
       display: none;
       min-height: 100dvh;
@@ -129,7 +110,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* back button */
     .back-btn {
       align-self: flex-start;
       display: inline-flex; align-items: center; gap: 6px;
@@ -143,23 +123,14 @@
     }
     .back-btn:active { background: #fde9ee; color: #b03a52; }
 
-    /* ═══════════════════════════
-       STAGE: CAKE
-       Mirrors the original index.html exactly:
-       body { display:flex; justify-content:center; align-items:center }
-       .container { flex-col; align-items:center; gap:20px }
-       .cake-container { height:250px; display:flex; justify-content:center }
-       .cake { transform:scale(5) }
-    ═══════════════════════════ */
     #cakeStage {
       background: #feefe5 !important;
-      /* override .stage padding — we want the original centered feel */
       justify-content: center !important;
       align-items: center !important;
       padding: 10 !important;
       min-height: 100dvh;
     }
-    /* inner wrapper = original .container */
+ 
     .cake-inner {
       display: flex;
       flex-direction: column;
@@ -176,7 +147,7 @@
       font-family: 'Pixelify Sans', sans-serif;
       color: #555;
     }
-    /* exact replica of original .cake-container */
+ 
     .cake-container {
       display: flex;
       justify-content: center;
@@ -184,7 +155,7 @@
       height: 250px;
       margin-bottom: 400px;
     }
-    /* exact replica of original .cake — scale(5) like the corrected style.css bottom */
+
     .cake {
       position: relative;
       animation: cake 1s infinite;
@@ -193,12 +164,12 @@
       z-index: 2;
       overflow: visible;
     }
-     /* ── mobile: shrink cake ── */
+
       @media (max-width: 500px) {
         .cake-container {
           transform: scale(0.70);
           transform-origin: center top;
-          margin-bottom: calc(-50% + 20px); /* pull up space left by scale */
+          margin-bottom: calc(-50% + 20px); 
         }
         #mainTitle { font-size: 24px; }
         #subTitle  { font-size: 15px; }
@@ -211,7 +182,6 @@
         }
       }
 
-    /* blow button */
     .blow-btn {
       margin-bottom: 5px;
       background: none; border: 2px dashed #e07080; border-radius: 30px;
@@ -235,7 +205,6 @@
       to   { transform: scale(1); opacity: 1; }
     }
 
-    /* continue button */
     .continue-btn {
       margin-top: 16px;
       background: #f4a7b9; border: none; border-radius: 30px;
@@ -251,10 +220,7 @@
     }
     .continue-btn.show { display: inline-flex; animation: popIn 0.4s ease both; }
     .continue-btn:active { transform: scale(0.95); }
-
-    /* ═══════════════════════════
-       STAGE: ENVELOPE / LETTERS
-    ═══════════════════════════ */
+   
     #envStage { background: #fff5f7; }
     .env-stage-title {
       font-size: clamp(18px,5vw,22px); color: #b03a52;
@@ -301,7 +267,6 @@
     .letter-content.active { display: block; animation: fadeSlide 0.3s ease both; }
     .letter-content::before { content: '💌'; display: block; font-size: 26px; margin-bottom: 12px; }
 
-    /* action buttons */
     .env-actions {
       display: flex; flex-wrap: wrap; justify-content: center;
       gap: 10px; margin-top: 20px; width: min(520px,100%);
@@ -317,9 +282,6 @@
     }
     .env-action-btn:active { transform: scale(0.94); background: #f9c6d0; }
 
-    /* ═══════════════════════════
-       STAGE: BLUER (dark)
-    ═══════════════════════════ */
     #bluerStage {
       background: #0d0005; justify-content: center;
       position: relative;
@@ -340,9 +302,6 @@
       background: #000; border-radius: 10px;
     }
 
-    /* ═══════════════════════════
-       STAGE: ZANJI
-    ═══════════════════════════ */
     #zanjiStage { background: #fff5f7; }
     .zanji-title {
       font-size: clamp(17px,5vw,20px); color: #b03a52;
@@ -356,9 +315,6 @@
     }
     .zanji-video-wrap video { width: 100%; display: block; }
 
-    /* ═══════════════════════════
-       STAGE: SPOTIFY
-    ═══════════════════════════ */
     #spotifyStage { background: #fff5f7; }
     .spotify-title {
       font-size: clamp(17px,5vw,20px); color: #b03a52;
@@ -366,29 +322,47 @@
     }
     .spotify-wrap { width: 100%; max-width: 660px; border-radius: 12px; overflow: hidden; }
 
-    /* ═══════════════════════════
-       MOBILE TWEAKS
-    ═══════════════════════════ */
     @media (max-width: 400px) {
       .env-actions { flex-direction: column; align-items: stretch; }
       .env-action-btn { justify-content: center; }
     }
+
+    #voiceStage { background: #fff5f7; }
+    .voice-title {
+      font-size: clamp(18px,5vw,22px); color: #b03a52;
+      margin-bottom: 4px; text-align: center;
+    }
+    .voice-sub {
+      font-family: 'Caveat', cursive; font-size: clamp(13px,3.5vw,15px);
+      color: #b56576; margin-bottom: 20px; text-align: center;
+    }
+    .voice-card {
+      width: min(460px,100%); background: #fffbf5;
+      border: 1.5px solid #f5d0d8; border-radius: 18px;
+      padding: 24px 20px; display: flex; flex-direction: column;
+      align-items: center; gap: 14px;
+      box-shadow: 0 6px 28px rgba(180,80,100,0.10);
+    }
+    .voice-avatar { font-size: 3rem; }
+    .voice-name {
+      font-size: clamp(15px,4vw,17px); color: #b03a52; text-align: center;
+    }
+    .voice-name span { display: block; font-family: 'Caveat', cursive; font-size: 14px; color: #b56576; margin-top: 2px; }
   </style>
 </head>
 <body>
 
-<!-- ═══ 1. PIN SCREEN ═══ -->
 <div id="pinScreen">
   <div class="pin-emoji">🎂</div>
   <h2>enter a code to open this </h2>
-  <div class="pin-clue">clue: ur birthday</div>
+  <div class="pin-clue">clue: hulaan mo HAHAHAHAHAHHAHAH</div>
   <div class="pin-dots" id="pinDots">
     <div class="pin-dot" id="pd0"></div>
     <div class="pin-dot" id="pd1"></div>
     <div class="pin-dot" id="pd2"></div>
     <div class="pin-dot" id="pd3"></div>
   </div>
-  <div class="pin-error" id="pinError">wrong code, try again 🌷</div>
+  <div class="pin-error" id="pinError">wrong code, try mo nga bday mo</div>
   <div class="pin-keypad">
     <button class="pin-key" onclick="pinPress('1')">1</button>
     <button class="pin-key" onclick="pinPress('2')">2</button>
@@ -404,16 +378,13 @@
   </div>
 </div>
 
-<!-- ═══ 2. HAPPY BIRTHDAY VIDEO (fullscreen) ═══ -->
 <div id="bdayOverlay" class="vid-overlay">
   <video id="bdayVideo" playsinline>
     <source src="happy-birthday.mp4" type="video/mp4">
   </video>
-  <div class="blow-hint" id="blowHint">🕯️ blow the candles!</div>
   <button class="vid-skip" onclick="endBday()">skip →</button>
 </div>
 
-<!-- ═══ 3. HAPPY HAPPY HAPPY VIDEO (fullscreen) ═══ -->
 <div id="happyOverlay" class="vid-overlay">
   <video id="happyVideo" playsinline>
     <source src="happy-happy-happy.mp4" type="video/mp4">
@@ -421,23 +392,21 @@
   <button class="vid-skip" onclick="endHappy()">skip →</button>
 </div>
 
-<!-- ═══ 4. CAKE STAGE ═══ -->
 <div id="cakeStage" class="stage">
   <div class="cake-inner">
-    <div id="mainTitle">Happy Birthday, <span style="font-family:'Fredoka One',cursive;">Z</span>anji!</div>
-    <div id="subTitle">make a wish and blow! 🕯️</div>
+    <div id="mainTitle">happy birthday, zanji!</div>
+    <div id="subTitle">make a wish and blow ba, like blowwwww</div>
 
     <div class="cake-container">
       <div class="cake" id="cake"></div>
     </div>
 
-    <div id="cakeConfetti" style="display:none; font-size:28px; animation:popIn 0.4s ease both;">🎉🎊✨🎈🌸</div>
-    <button class="blow-btn" id="blowBtn" onclick="blowCandles()">🌬️ blow the candles!</button>
+    <div id="cakeConfetti" style="display:none; font-size:28px; animation:popIn 1.2s ease both;">AHHAAHAHAHAHHAHAHHA cute. andaming candles noh, bilangin mo kung ilan HAHAHAHHHAHAHAHHAAHHAH</div>
+    <button class="blow-btn" id="blowBtn" onclick="blowCandles()">🌬️ blow the candles nga, boi</button>
     <button class="continue-btn" id="continueBtn" onclick="goToHappy()">continue 🎵</button>
   </div>
 </div>
 
-<!-- ═══ 5. ENVELOPE / LETTERS STAGE ═══ -->
 <div id="envStage" class="stage">
   <div class="env-stage-title">for you, zanji ko </div>
 
@@ -450,41 +419,42 @@
       <div class="letter-content active" id="letter-0">hi, zanji!
 alam mo ba, ang cool mo. literally. u're so astig in every way. tuwing kausap kita, parang ayaw ko nang matulog kasi hindi natatapos 'yung mga kwento mo sa buhay. sabi nga ni ada, buti hindi raw ako nao-overwhelm kasi grabe ka raw mag-yap, pero ewan ko, sobrang okay sa 'kin na umaabot tayo ng alas-kwatro kaka-talk. tuwing inaantok na ako, parang ayaw ko pa mag-end ang usapan natin. 'yan ang isang bagay na nagustuhan ko sa 'yo (not romantically, ha)—'yung pagiging yapper mo at kung gaano ka kagaling maghandle ng conversation. u're so astig, i swear
 
-sometimes napapaisip talaga ako, your energy whenever we talk fits perfectly sa social penetration theory. standard framework sa psychology na ang communication ay parang sibuyas with different layers, pero with u, those layers don't even matter. we automatically bypassed the boring orientation phase and dove straight into deep talks. normally, an introvert would feel so overwhelmed with that much interaction, pero iba kasi ang hatak mo. u act like a high-frequency transmitter na kahit dis-oras na ng gabi, hindi pa rin bumababa ang wavelength ng energy mo. it's never tiring to listen to u kasi hindi lang naman ito random daldal; it's genuinely engaging. matching it with neuroscience, u probably have a high dopaminergic drive when socializing—your brain genuinely thrives on exchanging ideas, kaya naman ang smooth and continuous ng flow ng usapan natin without running out of fuel. u pull me into your wavelength, kaya kahit bumabagsak na ang mga mata ko, i stay awake just to match your pacing
+sometimes napapaisip talaga ako, ur energy whenever we talk fits perfectly sa social penetration theory. standard framework sa psychology na ang communication ay parang sibuyas with different layers, pero with u, those layers don't even matter. we automatically bypassed the boring orientation phase and dove straight into deep talks. normally, an introvert would feel so overwhelmed with that much interaction, pero iba kasi ang hatak mo. u act like a high-frequency transmitter na kahit dis-oras na ng gabi, hindi pa rin bumababa ang wavelength ng energy mo. it's never tiring to listen to u kasi hindi lang naman ito random daldal; it's genuinely engaging. matching it with neuroscience, u probably have a high dopaminergic drive when socializing—ur brain genuinely thrives on exchanging ideas, kaya naman ang smooth and continuous ng flow ng usapan natin without running out of fuel. u pull me into your wavelength, kaya kahit bumabagsak na ang mga mata ko, i stay awake just to match your pacing
 
-one thing pa, 'yung sobrang lawak ng kaisipan mo sa isang bagay. u have an innovative and broad thinking, kaya parang ang dali lang sa 'yo ng mga gawain kasi humahanap ka ng paraan na mas madali pero sa paraang bongga pa rin. ang astig lang talaga. it actually reminds me of heuristic optimization and lateral thinking sa engineering. instead of following the long, exhausting pathway, your brain works like an algorithm that automatically finds a shortcut without compromising the grandeur of the output. para kang gumagamit ng greedy algorithm in computational logic—always choosing the most efficient next step to achieve a high-value result. hindi mo lang basta tinatapos ang isang task; u actually redesign the process itself para mas madali at mas maganda ang dating. your mind functions like a parallel processor running multiple simulations at once; while everyone else is still panicking over a single problem, nakahanap ka na agad ng diskarte with a very stylish execution
+one thing pa, 'yung sobrang lawak ng kaisipan mo sa isang bagay. u have an innovative and broad thinking, kaya parang ang dali lang sa 'yo ng mga gawain kasi humahanap ka ng paraan na mas madali pero sa paraang bongga pa rin. ang astig lang talaga. it actually reminds me of heuristic optimization and lateral thinking sa engineering. instead of following the long, exhausting pathway, ur brain works like an algorithm that automatically finds a shortcut without compromising the grandeur of the output. para kang gumagamit ng greedy algorithm in computational logic—always choosing the most efficient next step to achieve a high-value result. hindi mo lang basta tinatapos ang isang task; u actually redesign the process itself para mas madali at mas maganda ang dating. ur mind functions like a parallel processor running multiple simulations at once; while everyone else is still panicking over a single problem, nakahanap ka na agad ng diskarte with a very stylish execution
 
-u'isa pa ay kung gaano ka kagaling makipag-communicate, kaya siguro sobrang gaan ng loob ng mga tao sa 'yo kasi mataas ang emotional intelligence mo. hahaha gg. in behavioral science, that's what we call high interpersonal resonance. having high eq means u don't just speak words; u accurately read the room, adjust to your speaker, and mirror emotional states effortlessly. para kang may built-in sensor that automatically calibrates your tone para gumaan ang loob ng iba. navigating social dynamics that smoothly is a rare skill. this is deeply tied to your affective empathy and theory of mind, allowing u to decode exactly what someone needs to hear before they even verbalize it. u possess this unexplainable ability to anchor people's drifting moods, transforming chaotic social tension into absolute comfort without even breaking a sweat, passing on that emotional contagion of peace to everyone around ure so cool, zan, pero hindi laging 'yung cool side ang dapat mong ipinapakita. bahala ka, kapag nag-boom 'yan nang sabay-sabay, ang hirap n'yan i-handle. alam ko namang sanay ka na sa isolation tuwing may problema ka, o kaya gumagala para lang ma-ease 'yung mind mo, pero hindi kasi laging pwedeng ganoon. kailangan mo rin ng karamay. kung iniisip mong sapat na 'yung presence lang nila na kasama mo, feeling ko hindi eh. paano na lang kung isang araw hindi kayo makagala, 'di ba? gagi, tama ba ako? 'yon lang, ayaw ko na nga. sobrang dami ko pang want sabihin, pero hindi ko ma-put into words
+isa pa ay kung gaano ka kagaling makipag-communicate, kaya siguro sobrang gaan ng loob ng mga tao sa 'yo kasi mataas ang emotional intelligence mo. hahaha gg. in behavioral science, that's what we call high interpersonal resonance. having high eq means u don't just speak words; u accurately read the room, adjust to ur speaker, and mirror emotional states effortlessly. para kang may built-in sensor that automatically calibrates ur tone para gumaan ang loob ng iba. navigating social dynamics that smoothly is a rare skill. this is deeply tied to ur affective empathy and theory of mind, allowing u to decode exactly what someone needs to hear before they even verbalize it. u possess this unexplainable ability to anchor people's drifting moods, transforming chaotic social tension into absolute comfort without even breaking a sweat, passing on that emotional contagion of peace to everyone around u're so cool, zan, pero hindi laging 'yung cool side lang ang dapat mong ipinapakita
 
-pero ito lang, lastly—'yung kung paano mo sarilihin 'yung mga problema mo. boi, dapat hindi gano'n. kaya ka nga may mga friends para alam mong may matatakbuhan ka tuwing mabigat ang lahat. feel ko kasi, natatakot ka lang magpakita ng kahinaan dahil kilala ka nila bilang optimistic, pero talaga, hindi mo kailangang laging maging gano'n. i mean, okay naman na nakakapag-kwento ka sa 'kin, pero alam mo namang hindi ako ganoon kagaling mag-comfort. kaya mas want ko na maging free ka mag-vent out sa mga friends mo na kahit papaano ay macocomfort ka sa paraang kailangan mo
+ano pati,'yung kung paano mo sarilihin 'yung mga problema mo. boi, dapat hindi talaga gano'n. kaya ka nga may mga friends para alam mong may matatakbuhan ka tuwing mabigat ang lahat. feel ko kasi, natatakot ka lang magpakita ng kahinaan dahil kilala ka nila bilang optimistic, pero talaga, hindi mo kailangang laging maging gano'n. i mean, okay naman na nakakapag-kwento ka sa 'kin, pero alam mo namang hindi ako ganoon kagaling mag-comfort. kaya mas want ko na maging free ka mag-vent out sa mga friends mo na kahit papaano ay macocomfort ka sa paraang kailangan mo
       
-i notice u're operating under the strong friend schema and the pollyanna principle. dahil nasanay ka nang ikaw ang source of energy and light for others, u developed this resistance to show systemic vulnerability. in systems engineering, u behave exactly like a black box system—absorbing massive amounts of internal turbulence and external pressure, while maintaining a perfectly stable, functioning output to the environment. walang nakakakita ng stress mo sa labas kasi closed loop ang sarili mo when it comes to personal struggles. u treat your issues as private data packages that don't need external debugging, which becomes highly dangerous over time. it borders on hyper-independence, where u subconsciously feel that opening up means becoming a burden or losing your core identity
+i notice din u're operating under the strong friend schema and the pollyanna principle. dahil nasanay ka nang ikaw ang source of energy and light for others, u developed this resistance to show systemic vulnerability. in systems engineering, ano, u behave exactly like a black box system—absorbing massive amounts of internal turbulence and external pressure, while maintaining a perfectly stable, functioning output to the environment. walang nakakakita ng stress mo sa labas kasi closed loop ang sarili mo when it comes to personal struggles. u treat ur issues as private data packages that don't need external debugging, which becomes highly dangerous over time. it borders on hyper-independence, where u subconsciously feel that opening up means becoming a burden or losing your core identity
 
-u're so cool, zan, pero hindi laging 'yung cool side ang dapat mong ipinapakita. bahala ka, kapag nag-boom 'yan nang sabay-sabay, ang hirap n'yan i-handle. it always makes me think of structural fatigue and allostatic load—the gradual accumulation of stress from constant self-regulation and keeping things locked inside. kapag sumabay ang lahat at nag-reach ng critical mass, it can cause a thermal runaway or a sudden systemic explosion. in thermodynamics, keeping a closed system running at maximum heat without letting steam escape through a safety valve will inevitably lead to a catastrophic breach. and i really don't want that to happen to u. alam ko namang sanay ka na sa isolation tuwing may problema ka, o kaya gumagala para lang ma-ease 'yung mind mo, pero hindi kasi laging pwedeng ganoon. kailangan mo rin ng karamay
+u're so cool, zan, pero hindi laging 'yung cool side ang dapat mong ipinapakita. bahala ka, kapag nag-boom talaga 'yan nang sabay-sabay, ang hirap n'yan i-handle as i said. it always makes me think of structural fatigue and allostatic load—the gradual accumulation of stress from constant self-regulation and keeping things locked inside. kapag sumabay ang lahat at nag-reach ng critical mass, it can cause a thermal runaway or a sudden systemic explosion. in thermodynamics po, keeping a closed system running at maximum heat without letting steam escape thru a safety valve will inevitably lead to a catastrophic breach. and i really don't want that to happen to u. alam ko namang sanay ka na sa isolation tuwing may problema ka, o kaya gumagala para lang ma-ease 'yung mind mo, pero hindi kasi laging pwedeng ganoon. kailangan mo rin ng karamay
 
-u rely too much on behavioral avoidance—coping by physically displacing your emotions through movement. running away or driving around to clear your head acts as a temporary damper to a vibrating system. sa vibration mechanics, a damper only absorbs kinetic energy for a short cycle, pero if the source of the oscillation doesn't stop, the structure will eventually shatter. kung iniisip mong sapat na 'yung presence lang nila na kasama mo, feeling ko hindi eh. paano na lang kung isang araw hindi kayo makagala, 'di ba? gagi, tama ba ako? moving around is just a spatial mask for stagnation; it makes u feel like u're moving forward physically, but internally, the heavy load remains completely unprocessed. u need real affective verbalization with people u trust, allowing yourself to vent out the pressure before it completely compromises your internal system
+u rely too much on behavioral avoidance—coping by physically displacing ur emotions through movement. running away or driving around to clear ur head acts as a temporary damper to a vibrating system. sa vibration mechanics, a damper only absorbs kinetic energy for a short cycle, pero if the source of the oscillation doesn't stop, the structure will eventually shatter. kung iniisip mong sapat na 'yung presence lang nila na kasama mo, feeling ko hindi eh. paano na lang kung isang araw hindi kayo makagala, 'di ba? gagi, tama ba ako? moving around is just a spatial mask for stagnation; it makes u feel like u're moving forward physically, but internally, the heavy load remains completely unprocessed. u need real affective verbalization with people u trust, allowing yourself to vent out the pressure before it completely compromises ur internal system
      
-'yon lang, ayaw ko na nga. sobrang dami ko pang want sabihin tungkol sa kung gaano ka ka-complex, ka-lalim, at ka-astig na tao, pero hindi ko na talaga ma-put into words; and nag-rely ako more on scientific and psychological frameworks para ma-communicate kahit papaano kung gaano kita na-appreciate and how much i care. i hope you understand that this is all coming from a place of genuine concern and affection for you as a person, and not just some random analysis. i just want the best for u, zan, and i want u to be happy and healthy in every way possible. thank u for being such an amazing friend, and for sharing your light with me and everyone around u. u're truly one of a kind, and i'm grateful that i spent a little time with u, zanji ko. i have no regrets</div>
+'yon lang, ayaw ko na nga. sobrang dami ko pang want sabihin tungkol sa kung gaano ka ka-complex, ka-lalim, at ka-astig na tao, pero hindi ko na talaga ma-put into words; and nag-rely ako more on scientific and psychological frameworks para ano, basta. like, kahit papaano maramdaman mo na gaano kita na-appreciate and how much i care for u. i hope you understand that this is all coming from a place of genuine concern and affection for u as a person, and not just some random analysis. i just want the best for u, zan, and i want u to be happy and healthy in every way possible. thank u for being such an amazing friend, and for sharing ur light with me and everyone around u. u're truly one of a kind, and i'm grateful that i spent a little time with u, zanji ko. i have no regrets</div>
 
       
-      <div class="letter-content" id="letter-1">hey, i just wanted to write this down, kahit alam kong hinding-hindi mo 'to mababasa.
+      <div class="letter-content" id="letter-1">hey, i just wanted to write this down, kahit alam kong hinding-hindi mo 'to mababasa or malalaman hahahhaha
 
-to be honest, wala talaga akong balak na kausapin ka ulit o magparamdam sa 'yo. everyday, i'm still haunted by the exact same thought—na baka kapag bumalik ako sa buhay mo, i might just ruin you. natatakot akong masira ko lang kung anong peace of mind mayroon ka ngayon. so, pinili ko na lang na tuluyang lumayo
+to be honest, wala talaga akong balak na kausapin ka ulit o magparamdam sa 'yo. everyday, i'm still haunted by the exact same thought—na baka kapag bumalik ako sa buhay mo, i might just ruin you. natatakot akong masira ko lang kung anong peace of mind mayroon ka now. so, pinili ko talaga na tuluyang lumayo na lang
 
-pero ngayong araw, gumawa ako ng website na 'to. wala akong balak ibigay sa 'yo 'yung link, at wala akong balak ipaalam na nage-exist 'to. ginawa ko lang 'to para maging sign na kahit hindi na ako pwedeng lumapit, hinding-hindi ko nakalimutan ang birthday mo
+basta, ginawa ko 'tong web before pa tayong tumigil mag-usap para ano, need na lang ng improvements if ever. wala akong balak ibigay sa 'yo 'yung link, at wala akong balak ipaalam na nage-exist 'to. ginawa ko lang 'to para maging sign na kahit hindi na tayo p'wedeng mag-talk or magkaro'n ng interaction, hinding-hindi ko nakalimutan ang birthday mo
 
-this website is just my secret way of remembering you while doing the right thing by staying away. safe space ko na lang 'to, and my quiet promise na hinding-hindi ko na guguluhin ang mundo mo</div>
+this webs is just my secret way of remembering you while doing the right thing by staying away. safe space ko na lang 'to, and my quiet promise na hinding-hindi na kita guguluhin</div>
     </div>
   </div>
 
   <div class="env-actions">
-    <button class="env-action-btn" onclick="goTo('bluerStage')">🎬 ;(</button>
-    <button class="env-action-btn" onclick="goTo('zanjiStage'); playZanji()">🌸 zanji</button>
-    <button class="env-action-btn" onclick="goTo('spotifyStage')">🎵 music</button>
+    <button class="env-action-btn" onclick="goTo('bluerStage')">eme eme lang</button>
+    <button class="env-action-btn" onclick="goTo('zanjiStage'); playZanji()"> zanji</button>
+    <button class="env-action-btn" onclick="goTo('spotifyStage')">eh music</button>
+    <button class="env-action-btn" onclick="goTo('voiceStage')">kanta q,boi</button>
   </div>
 </div>
 
-<!-- ═══ 6. BLUER THAN BLUE STAGE ═══ -->
+
 <div id="bluerStage" class="stage">
   <button class="back-btn" onclick="goBack('bluerStage')">← back</button>
   <div class="bluer-video-wrap">
@@ -494,7 +464,7 @@ this website is just my secret way of remembering you while doing the right thin
   </div>
 </div>
 
-<!-- ═══ 7. ZANJI STAGE ═══ -->
+
 <div id="zanjiStage" class="stage">
   <button class="back-btn" onclick="goBack('zanjiStage')">← back</button>
   <div class="zanji-title">zanji </div>
@@ -505,10 +475,10 @@ this website is just my secret way of remembering you while doing the right thin
   </div>
 </div>
 
-<!-- ═══ 8. SPOTIFY STAGE ═══ -->
+
 <div id="spotifyStage" class="stage">
   <button class="back-btn" onclick="goBack('spotifyStage')">← back</button>
-  <div class="spotify-title">🎵 a playlist for you</div>
+  <div class="spotify-title">hahahhaha ginawa kong playlist</div>
   <div class="spotify-wrap">
     <iframe
       style="border-radius:12px"
@@ -521,9 +491,8 @@ this website is just my secret way of remembering you while doing the right thin
 </div>
 
 <script>
-/* ══════════════════════════
-   PIN
-══════════════════════════ */
+
+
 const PIN = '0527';
 let pinEntry = '';
 
@@ -558,9 +527,6 @@ function checkPin() {
   }
 }
 
-/* ══════════════════════════
-   STAGE ROUTER
-══════════════════════════ */
 let stageHistory = [];
 
 function goTo(id) {
@@ -569,6 +535,7 @@ function goTo(id) {
   document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  if (id === 'galleryStage') loadGallery();
 }
 
 function goBack(fromId) {
@@ -579,9 +546,6 @@ function goBack(fromId) {
   window.scrollTo(0, 0);
 }
 
-/* ══════════════════════════
-   BIRTHDAY VIDEO
-══════════════════════════ */
 let bdayDone = false, micStream = null, micAudioCtx = null;
 
 function startBday() {
@@ -625,15 +589,12 @@ function endBday() {
   document.getElementById('bdayOverlay').classList.remove('open');
   stageHistory = [];
   goTo('cakeStage');
-  createCandles(4);
-  // desktop: mic; mobile: button only
+  createCandles(17);
   const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   if (!isMobile) startCakeMic();
 }
 
-/* ══════════════════════════
-   CAKE STAGE  
-══════════════════════════ */
+
 let cakeMicStream = null, cakeMicCtx = null, cakeBlown = false;
 const cakeColors = ['green-candle','purple-candle','blue-candle','yellow-candle'];
 
@@ -686,7 +647,6 @@ function blowCandles() {
   cakeBlown = true;
   if (cakeMicStream) { cakeMicStream.getTracks().forEach(t => t.stop()); cakeMicStream = null; }
   if (cakeMicCtx)    { cakeMicCtx.close(); cakeMicCtx = null; }
-  // blow out each candle with a random delay — exactly like original
   document.querySelectorAll('.candle').forEach(candle => {
     setTimeout(() => {
       cakeColors.forEach(c => { if (candle.classList.contains(c)) candle.classList.add('blown'); });
@@ -717,9 +677,6 @@ function endHappy() {
   goTo('envStage');
 }
 
-/* ══════════════════════════
-   ZANJI AUTOPLAY
-══════════════════════════ */
 function playZanji() {
   setTimeout(() => {
     const v = document.getElementById('zanjiVideo');
@@ -728,9 +685,6 @@ function playZanji() {
   }, 300);
 }
 
-/* ══════════════════════════
-   LETTER TABS
-══════════════════════════ */
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const idx = btn.dataset.tab;
@@ -739,7 +693,24 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.add('active');
     document.getElementById('letter-' + idx).classList.add('active');
   });
-});
+})
+
 </script>
+<div id="voiceStage" class="stage">
+  <button class="back-btn" onclick="goBack('voiceStage')">← back</button>
+  <div class="voice-title">para sa'yo, boi 🎙️</div>
+  <div class="voice-sub">kanta q, kac u badly want me to sing haha nuba</div>
+  <div class="voice-card">
+    <div class="voice-avatar">😞</div>
+    <div class="voice-name">happy birthday to u, happy haha birthday
+      <span>langya, nakakahiya, ndi p yn ung 2nay qng boses ha</span>
+    </div>
+    
+    <video width="100%" height="500" style="border-radius: 8px; background: #000;" controls>
+      <source src="kantaq.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
 </body>
 </html>
